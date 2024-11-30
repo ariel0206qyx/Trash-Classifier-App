@@ -39,3 +39,4 @@ let emojiObjects = [
                     EmojiModel(emoji: "📄", emojiName: "paper"),
                     EmojiModel(emoji: "🧻", emojiName: "toilet paper roll"),
                     EmojiModel(emoji: "🍌", emojiName: "banana peel")]
+

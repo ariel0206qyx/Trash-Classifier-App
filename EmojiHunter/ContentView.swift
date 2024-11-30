@@ -1,35 +1,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var detectedObjects: [(label: String, confidence: Float)] = []
-    @State private var displayedObjects: [(label: String, confidence: Float)] = []
-    @State private var timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect() // Timer for 5-second intervals
+    @State private var detectedObjects: [(label: String, confidence: Float, category: String)] = []
+    @State private var displayedObjects: [(label: String, confidence: Float, category: String)] = []
+    @State private var timer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
-            // Camera Feed
             CustomCameraRepresentable(detectedObjects: $detectedObjects)
                 .edgesIgnoringSafeArea(.all)
 
-            // Top 5 Objects Overlay
             VStack {
                 Spacer()
-                VStack(spacing: 10) {
-                    Text("Top 5 Objects")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .padding(.bottom, 5)
-
+                VStack {
                     ForEach(displayedObjects, id: \.label) { object in
-                        HStack {
-                            Text(object.label.capitalized)
+                        VStack {
+                            Text("Object: \(object.label.capitalized)")
                                 .font(.headline)
                                 .foregroundColor(.white)
-                            Spacer()
-                            Text(String(format: "%.2f%%", object.confidence * 100))
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
+                            Text("Category: \(object.category)")
+                                .font(.subheadline)
+                                .foregroundColor(object.category.contains("Not a built-in object") ? .yellow : .green)
+                            Text(String(format: "Confidence: %.2f%%", object.confidence * 100))
+                                .font(.caption)
+                                .foregroundColor(.white.opacity(0.7))
                         }
                         .padding()
                         .background(Color.black.opacity(0.7))
@@ -43,15 +37,8 @@ struct ContentView: View {
             }
         }
         .onReceive(timer) { _ in
-            updateDisplayedObjects()
+            // Update displayedObjects every 0.5 seconds
+            self.displayedObjects = Array(detectedObjects.prefix(5))
         }
-    }
-
-    // Helper Function to Extract Top 5 Detected Objects
-    private func updateDisplayedObjects() {
-        displayedObjects = detectedObjects
-            .sorted { $0.confidence > $1.confidence }
-            .prefix(5)
-            .map { $0 }
     }
 }
