@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct CustomCameraRepresentable: UIViewControllerRepresentable {
-    @Binding var detectedObjects: [(label: String, confidence: Float)]
+    @Binding var detectedObjects: [(label: String, confidence: Float, category: String)]
 
     func makeUIViewController(context: Context) -> CameraViewController {
         let controller = CameraViewController()
@@ -30,7 +30,7 @@ struct CustomCameraRepresentable: UIViewControllerRepresentable {
             self.parent = parent
         }
 
-        func didDetectObjects(_ objects: [(label: String, confidence: Float)]) {
+        func didDetectObjects(_ objects: [(label: String, confidence: Float, category: String)]) {
             DispatchQueue.main.async {
                 self.parent.detectedObjects = objects
             }

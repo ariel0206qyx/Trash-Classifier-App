@@ -11,7 +11,7 @@ import Vision
 import CoreML
 
 protocol ObjectDetectionDelegate: AnyObject {
-    func didDetectObjects(_ objects: [(label: String, confidence: Float)])
+    func didDetectObjects(_ objects: [(label: String, confidence: Float, category: String)])
 }
 
 class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -23,7 +23,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
-        setupVision()
     }
 
     private func setupCamera() {
@@ -48,17 +47,39 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         do {
             let model = try VNCoreMLModel(for: MobileNetV2().model)
             return VNCoreMLRequest(model: model, completionHandler: { [weak self] request, _ in
-                guard let results = request.results as? [VNClassificationObservation] else { return }
-                let objects = results.map { (label: $0.identifier, confidence: $0.confidence) }
-                self?.delegate?.didDetectObjects(objects)
+                self?.processClassifications(for: request)
             })
         } catch {
             fatalError("Failed to load Vision ML model: \(error)")
         }
     }()
+    
+    private func processClassifications(for request: VNRequest) {
+        DispatchQueue.main.async {
+            guard let results = request.results as? [VNClassificationObservation] else {
+                print("No classification results found.")
+                return
+            }
 
-    private func setupVision() {
-        // Vision setup is handled by `classificationRequest`
+            // Set a confidence threshold
+            let confidenceThreshold: Float = 0.2
+
+            let classifications = results
+                .filter { Float($0.confidence) >= confidenceThreshold } // Filter low-confidence results
+                .map { observation -> (label: String, confidence: Float, category: String) in
+                    let label = observation.identifier.lowercased() // Normalize to lowercase
+                    let confidence = Float(observation.confidence)
+                    
+                    // Perform looser matching
+                    let category = trashCategoryMapping.first { (key, _) in
+                        label.contains(key) // Check if the label contains the key as a substring
+                    }?.value ?? "Not a built-in object, but we think this object is \(observation.identifier)"
+
+                    return (label: observation.identifier, confidence: confidence, category: category)
+                }
+
+            self.delegate?.didDetectObjects(classifications)
+        }
     }
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
