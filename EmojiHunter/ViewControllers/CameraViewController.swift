@@ -19,10 +19,13 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var captureSession: AVCaptureSession!
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private let videoDataOutput = AVCaptureVideoDataOutput()
+    private var stateLabel: UILabel!
+    private var trashMappingLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
+        setupUI()
     }
 
     private func setupCamera() {
@@ -43,6 +46,66 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         captureSession.startRunning()
     }
 
+    private func setupUI() {
+        // State Label
+        stateLabel = UILabel()
+        stateLabel.translatesAutoresizingMaskIntoConstraints = false
+        stateLabel.textAlignment = .center
+        stateLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        stateLabel.textColor = .white
+        stateLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        view.addSubview(stateLabel)
+
+        // State Selector Button
+        let stateButton = UIButton(type: .system)
+        stateButton.translatesAutoresizingMaskIntoConstraints = false
+        stateButton.setTitle("Change State", for: .normal)
+        stateButton.backgroundColor = UIColor.systemBlue
+        stateButton.setTitleColor(.white, for: .normal)
+        stateButton.layer.cornerRadius = 10
+        stateButton.addTarget(self, action: #selector(promptForStateSelection), for: .touchUpInside)
+        view.addSubview(stateButton)
+
+        // UI elements
+        NSLayoutConstraint.activate([
+            // State Label
+            stateLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stateLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+            stateLabel.heightAnchor.constraint(equalToConstant: 40),
+
+            // State Button
+            stateButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stateButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
+            stateButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+
+        updateStateLabel()
+    }
+
+
+    private func updateStateLabel() {
+        let selectedState = UserDefaults.standard.string(forKey: "SelectedState") ?? "Default"
+        stateLabel.text = "Current State: \(selectedState.capitalized)"
+    }
+
+
+    @objc private func promptForStateSelection() {
+        let alert = UIAlertController(title: "Select State", message: "Choose your location to adjust trash categorization.", preferredStyle: .actionSheet)
+
+        let states = ["California", "New York", "Texas", "Pennsylvania", "Default"] // Add all supported states
+        for state in states {
+            alert.addAction(UIAlertAction(title: state, style: .default, handler: { _ in
+                UserDefaults.standard.set(state.lowercased(), forKey: "SelectedState")
+                self.updateStateLabel()
+            }))
+        }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
     lazy var classificationRequest: VNCoreMLRequest = {
         do {
             let model = try VNCoreMLModel(for: MobileNetV2().model)
@@ -53,7 +116,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             fatalError("Failed to load Vision ML model: \(error)")
         }
     }()
-    
+
     private func processClassifications(for request: VNRequest) {
         DispatchQueue.main.async {
             guard let results = request.results as? [VNClassificationObservation] else {
@@ -61,22 +124,23 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
                 return
             }
 
-            // Set a confidence threshold
             let confidenceThreshold: Float = 0.2
+            let selectedState = UserDefaults.standard.string(forKey: "SelectedState")?.capitalized ?? "Default"
 
             let classifications = results
-                .filter { Float($0.confidence) >= confidenceThreshold } // Filter low-confidence results
+                .filter { Float($0.confidence) >= confidenceThreshold }
                 .map { observation -> (label: String, confidence: Float, category: String) in
-                    let label = observation.identifier.lowercased() // Normalize to lowercase
-                    let confidence = Float(observation.confidence)
-                    
-                    // Perform looser matching
-                    let category = trashCategoryMapping.first { (key, _) in
-                        label.contains(key) // Check if the label contains the key as a substring
-                    }?.value ?? "Not a built-in object, but we think this object is \(observation.identifier)"
+                    let label = observation.identifier.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                    let locationMapping = trashCategoryMappingByState[selectedState] ?? trashCategoryMappingByState["Default"]!
 
-                    return (label: observation.identifier, confidence: confidence, category: category)
+                    let category = locationMapping[label] ?? "Unknown"
+                    if category == "Unknown" {
+                        print("Unmapped label detected: \(label)")
+                    }
+
+                    return (label: observation.identifier, confidence: Float(observation.confidence), category: category)
                 }
+
 
             self.delegate?.didDetectObjects(classifications)
         }
