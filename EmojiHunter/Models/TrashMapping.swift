@@ -12,15 +12,10 @@ let trashCategoryMappingByState: [String: [String: String]] = [
     "California": [
             // Extensive recycling infrastructure
             "water bottle": "Recyclable",
-            "glass bottle": "Recyclable",
             "cardboard": "Recyclable",
-            "aluminum can": "Recyclable",
-            "tin can": "Recyclable",
             "plastic container": "Recyclable",
             "pizza box": "Recyclable",
             "milk carton": "Recyclable",
-            "newspaper": "Recyclable",
-            "magazine": "Recyclable",
             "plastic cup": "Recyclable",
             "aluminum foil": "Recyclable",
             "egg carton (cardboard)": "Recyclable",
@@ -28,6 +23,33 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "envelope": "Recyclable",
             "glass jar": "Recyclable",
             "bubble wrap": "Recyclable",
+            "corrugated cardboard": "Recyclable",
+            "paper grocery bag": "Recyclable",
+            "paper bag": "Recyclable",
+            "kraft paper": "Recyclable",
+            "newspaper": "Recyclable",
+            "newspaper insert": "Recyclable",
+            "white office paper": "Recyclable",
+            "white office mail": "Recyclable",
+            "magazine": "Recyclable",
+            "catalog": "Recyclable",
+            "folding carton": "Recyclable",
+            "paperboard packaging": "Recyclable",
+            "aseptic container": "Recyclable",
+            "gable-top cartons": "Recyclable",
+            "paper food service ware": "Recyclable",
+            "tin can": "Recyclable",
+            "aluminum can CRV": "Recyclable",
+            "aluminum can": "Recyclable",
+            "plastic beverage bottle (PETE, HDPE)": "Recyclable",
+            "glass bottle": "Recyclable",
+            "clear glass container": "Recyclable",
+            "plastic trash bag": "Recyclable",
+            "plastic food service ware": "Recyclable",
+            "clean dimensional lumber": "Recyclable",
+            "clean engineered wood": "Recyclable",
+            "clean pallets and crate": "Recyclable",
+
             
             // Compostable Objects
             "banana": "Compostable",
@@ -36,9 +58,25 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "coffee": "Compostable",
             "tea bag": "Compostable",
             "bread": "Compostable",
-            "leaf": "Compostable",
             "grass clippings": "Compostable",
             "flower": "Compostable",
+            "egg shell": "Compostable",
+            "egg": "Compostable",
+            "meat": "Compostable",
+            "fish": "Compostable",
+            "chicken": "Compostable",
+            "turkey": "Compostable",
+            "pork": "Compostable",
+            "beef": "Compostable",
+            "milk": "Compostable",
+            "dairy": "Compostable",
+            "cheese": "Compostable",
+            "leaf": "Compostable",
+            "grass": "Compostable",
+            "prunings": "Compostable",
+            "branch": "Compostable",
+            "wood": "Compostable",
+
 
             // Waste Items (Strict policies about limiting contamination)
             "plastic bag": "Waste",
@@ -50,6 +88,12 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "diaper": "Waste",
             "mask (disposable)": "Waste",
             "foam packaging": "Waste",
+            "personal protective equipments": "Waste",
+            "mixed residues": "Waste",
+            "tire": "Waste",
+            "mattress": "Recyclable",
+            "mattress foundation": "Recyclable",
+
 
             // Electronics
             "phone": "E-Waste",
@@ -65,7 +109,9 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "cable": "E-Waste",
             "hard drive": "E-Waste",
             "computer keyboard": "E-Waste",
-            "desktop computer": "E-Waste"
+            "desktop computer": "E-Waste",
+            "battrey": "E-Waste",
+            "solar panel": "E-Waste"
         ],
     "New York": [
             // (Focus on glass, metal, and paper)
@@ -80,6 +126,12 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "magazine": "Recyclable",
             "wrapping paper (non-metallic)": "Recyclable",
             "pizza box": "Waste", // Pizza boxes are waste because of grease
+            "glass bottle (colored)": "Recyclable",
+            "metal lid": "Recyclable",
+            "hard plastic": "Recyclable",
+            "rigid plastic": "Recyclable",
+            "foil product": "Recyclable",
+            "large plastic container": "Recyclable",
 
             // Compostable Items
             "apple": "Compostable",
@@ -87,6 +139,16 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "coffee": "Compostable",
             "bread": "Compostable",
             "egg shell": "Compostable",
+            "vegetable peels": "Compostable",
+            "fruit peel": "Compostable",
+            "coffee ground": "Compostable",
+            "tea bag": "Compostable",
+            "grass clipping": "Compostable",
+            "leaf": "Compostable",
+            "yard trimming": "Compostable",
+            "paper towel": "Compostable",
+            "napkin": "Compostable",
+            "paper plate": "Compostable",
 
             // Waste Items (Limited acceptance for soft plastics)
             "plastic bag": "Waste",
@@ -95,6 +157,15 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "candy wrapper": "Waste",
             "diaper": "Waste",
             "light bulb (non-LED)": "Waste",
+            "ceramic": "Waste",
+            "broken mirror": "Waste",
+            "mirror": "Waste",
+            "shredded paper": "Waste",
+            "foam container": "Waste",
+            "non-recyclable plastic": "Waste",
+            "rubber product": "Waste",
+            "vacuum bag": "Waste",
+            "sanitary product": "Waste",
 
             // Electronics
             "phone": "E-Waste",
@@ -110,7 +181,24 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "cable": "E-Waste",
             "hard drive": "E-Waste",
             "computer keyboard": "E-Waste",
-            "desktop computer": "E-Waste"
+            "desktop computer": "E-Waste",
+            "television": "E-Waste",
+            "computer": "E-Waste",
+            "game console": "E-Waste",
+
+            // Special Waste Items
+            "paint": "Special Waste",
+            "oil": "Special Waste",
+            "fluorescent bulb": "Special Waste",
+            "propane tank": "Special Waste",
+            "car battery": "Special Waste",
+            "pesticide": "Special Waste",
+            "hazardous chemical": "Special Waste",
+            "mattress": "Special Waste",
+            "tire": "Special Waste",
+            "large appliance": "Special Waste",
+            "construction debris": "Special Waste",
+            "wood scrap": "Special Waste"
         ],
     "Texas": [
             // Focus on metal, glass, and cardboard
@@ -161,6 +249,15 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "milk carton": "Recyclable",
             "plastic container": "Recyclable",
             "pizza box": "Recyclable",
+            "glass jar": "Recyclable",
+            "metal food can": "Recyclable",
+            "plastic jug": "Recyclable",
+            "aluminum foil": "Recyclable",
+            "newspaper": "Recyclable",
+            "office paper": "Recyclable",
+            "magazine": "Recyclable",
+            "corrugated cardboard boxe": "Recyclable",
+            "clean paperboard": "Recyclable",
 
             // Compostable Objects
             "banana": "Compostable",
@@ -168,6 +265,14 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "vegetable": "Compostable",
             "grass clippings": "Compostable",
             "apple core": "Compostable",
+            "yard waste": "Compostable",
+            "fruit peel": "Compostable",
+            "bread crust": "Compostable",
+            "eggshell": "Compostable",
+            "compostable napkin": "Compostable",
+            "flower": "Compostable",
+            "coffee filter": "Compostable",
+            "tea bag": "Compostable",
 
             // Waste Items (Soft plastics are waste)
             "plastic bag": "Waste",
@@ -175,6 +280,14 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "cigarette butt": "Waste",
             "diaper": "Waste",
             "foam packaging": "Waste",
+            "plastic wrapper": "Waste",
+            "broken ceramic": "Waste",
+            "disposable utensil": "Waste",
+            "mixed-material packaging": "Waste",
+            "vacuum dust": "Waste",
+            "rubber material": "Waste",
+            "food-soiled paper": "Waste",
+            "non-recyclable plastic": "Waste",
 
             // Electronics
             "phone": "E-Waste",
@@ -190,7 +303,26 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "cable": "E-Waste",
             "hard drive": "E-Waste",
             "computer keyboard": "E-Waste",
-            "desktop computer": "E-Waste"
+            "desktop computer": "E-Waste",
+            "televisions": "E-Waste",
+            "printer": "E-Waste",
+            "game console": "E-Waste",
+            "headphone": "E-Waste",
+            "electronic watche": "E-Waste",
+            "power tool": "E-Waste",
+            "electric cable": "E-Waste",
+
+            // Special Waste Items
+            "motor oil container": "Special Waste",
+            "oil filter": "Special Waste",
+            "paint can": "Special Waste",
+            "lead-acid battery": "Special Waste",
+            "fluorescent tube": "Special Waste",
+            "propane tank": "Special Waste",
+            "automotive part": "Special Waste",
+            "asbestos material": "Special Waste",
+            "construction debris": "Special Waste",
+            "treated wood": "Special Waste"
         ],
     "Default": [
             // Recyclable Items
