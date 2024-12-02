@@ -20,12 +20,12 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var previewLayer: AVCaptureVideoPreviewLayer!
     private let videoDataOutput = AVCaptureVideoDataOutput()
     private var stateLabel: UILabel!
-    private var trashMappingLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
         setupUI()
+        showDisclaimer() // Show disclaimer on app launch
     }
 
     private func setupCamera() {
@@ -66,7 +66,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         stateButton.addTarget(self, action: #selector(promptForStateSelection), for: .touchUpInside)
         view.addSubview(stateButton)
 
-        // UI elements
+        // Set up constraints for UI elements
         NSLayoutConstraint.activate([
             // State Label
             stateLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -84,12 +84,22 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         updateStateLabel()
     }
 
+    private func showDisclaimer() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Disclaimer",
+                message: "This application uses machine learning for classification, which may produce inaccurate results. Please double-check your item's category before disposal.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 
     private func updateStateLabel() {
         let selectedState = UserDefaults.standard.string(forKey: "SelectedState") ?? "Default"
         stateLabel.text = "Current State: \(selectedState.capitalized)"
     }
-
 
     @objc private func promptForStateSelection() {
         let alert = UIAlertController(title: "Select State", message: "Choose your location to adjust trash categorization.", preferredStyle: .actionSheet)
@@ -140,7 +150,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
 
                     return (label: observation.identifier, confidence: Float(observation.confidence), category: category)
                 }
-
 
             self.delegate?.didDetectObjects(classifications)
         }
