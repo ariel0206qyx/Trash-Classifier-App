@@ -12,15 +12,10 @@ let trashCategoryMappingByState: [String: [String: String]] = [
     "California": [
             // Extensive recycling infrastructure
             "water bottle": "Recyclable",
-            "glass bottle": "Recyclable",
             "cardboard": "Recyclable",
-            "aluminum can": "Recyclable",
-            "tin can": "Recyclable",
             "plastic container": "Recyclable",
             "pizza box": "Recyclable",
             "milk carton": "Recyclable",
-            "newspaper": "Recyclable",
-            "magazine": "Recyclable",
             "plastic cup": "Recyclable",
             "aluminum foil": "Recyclable",
             "egg carton (cardboard)": "Recyclable",
@@ -63,7 +58,6 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "coffee": "Compostable",
             "tea bag": "Compostable",
             "bread": "Compostable",
-            "leaf": "Compostable",
             "grass clippings": "Compostable",
             "flower": "Compostable",
             "egg shell": "Compostable",
@@ -115,7 +109,7 @@ let trashCategoryMappingByState: [String: [String: String]] = [
             "cable": "E-Waste",
             "hard drive": "E-Waste",
             "computer keyboard": "E-Waste",
-            "desktop computer": "E-Waste"
+            "desktop computer": "E-Waste",
             "battrey": "E-Waste",
             "solar panel": "E-Waste"
         ],
