@@ -18,7 +18,8 @@ This application leverages machine learning to classify trash into actionable ca
 2. **[TACO](https://github.com/pedropro/TACO)**:  
    - We explored and integrated the TACO dataset for training trash classification.
    - This dataset contains diverse annotations of trash in the wild, with labeled classes like bottles, cans, and plastic bags.
-Note on Dataset Usage:
+
+**Note on Dataset Usage**:
 - Like discussed in class, training our own dataset often does not yield higher accuracy compared to leveraging pre-trained models on robust datasets.
 - TACO dataset authors spent years collecting high-quality data, and replicating or exceeding their accuracy within our two-week timeframe was infeasible.
 - As such, although we attempted to train our own data, we went back to using pre-trained models and focused on integrating functionality and refining user experience.
